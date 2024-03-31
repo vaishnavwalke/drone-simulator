@@ -1,23 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import MapComponent from "./components/MapComponent";
+import InputComponent from "./components/InputComponent";
+import ControlsComponent from "./components/ControlsComponent";
 
 function App() {
+  const [drones, setDrones] = useState([]);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const simulateDrones = (data) => {
+    const coordinates = data.split("\n").map((line) => {
+      const [lat, lng] = line.split(",").map(Number);
+      return { lat, lng };
+    });
+
+    setDrones(coordinates);
+  };
+
+  const handlePause = () => {
+    setIsPaused(true);
+  };
+
+  const handleResume = () => {
+    setIsPaused(false);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Drone Simulator</h1>
+      <InputComponent onSimulate={simulateDrones} />
+      <ControlsComponent onPause={handlePause} onResume={handleResume} />
+      <MapComponent drones={drones} />
     </div>
   );
 }
